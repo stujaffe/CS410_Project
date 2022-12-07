@@ -111,7 +111,7 @@ class GoogleNews(object):
             canonical_url = element[0].get("href")
         except IndexError:
             return canonical_url
-        
+
         if "http" not in canonical_url:
             try:
                 element = dom.xpath("//head//link[@rel='alternate']")
@@ -172,7 +172,7 @@ class GoogleNews(object):
 
         output = pd.DataFrame(
             list(zip(dates, titles, links_rss, links_canon, contents)),
-            columns=["date", "title", "link_rss", "links_canonical","article_content"],
+            columns=["date", "title", "link_rss", "links_canonical", "article_content"],
         )
 
         return output
@@ -192,9 +192,6 @@ if __name__ == "__main__":
     for url in canonicals:
         content = gn.get_article_conents(canonical_url=url, query_terms=["MSFT"])
         contents.append(content)
-    
+
     for c in contents:
         print(len(c))
-
-
-    

@@ -3,8 +3,11 @@ import os
 from requests.auth import HTTPBasicAuth
 import time
 
+
 class Reddit(object):
-    def __init__(self, client_id: str, secret_token: str, username: str, password: str) -> None:
+    def __init__(
+        self, client_id: str, secret_token: str, username: str, password: str
+    ) -> None:
         self.client_id = client_id
         self.secret_token = secret_token
         self.username = username
@@ -12,31 +15,39 @@ class Reddit(object):
         self.headers = {}
         self.auth_token_expires = 0
         self.base_url = "https://oauth.reddit.com"
-    
+
     def _update_auth_token(self, auth_response: dict) -> None:
         auth_token = auth_response.get("access_token")
-        
+
         try:
-            expires_in = auth_response.get("expires_in",0)
+            expires_in = auth_response.get("expires_in", 0)
         except TypeError:
             expires_in = 0
-        
+
         # Auth token expires in current UNIX timestamp plus expiry seconds.
         self.auth_token_expires = int(time.time()) + expires_in
         # Update auth token
         self.auth_token = auth_token
 
         return None
-    
+
     def _update_oauth_headers(self) -> dict:
 
         # Update headers if auth token is less than 5 minutes from expiring (for some wiggle room)
-        if self.auth_token_expires <= int(time.time()) + 60*5:
+        if self.auth_token_expires <= int(time.time()) + 60 * 5:
             auth = HTTPBasicAuth(username=self.client_id, password=self.secret_token)
-            payload = {"grant_type":"password", "username":self.username,"password":self.password}
+            payload = {
+                "grant_type": "password",
+                "username": self.username,
+                "password": self.password,
+            }
             headers = {"User-Agent": "CS410_Project/0.0.1"}
-            auth_response = requests.post("https://www.reddit.com/api/v1/access_token",
-                        auth=auth, data=payload, headers=headers)
+            auth_response = requests.post(
+                "https://www.reddit.com/api/v1/access_token",
+                auth=auth,
+                data=payload,
+                headers=headers,
+            )
             self._update_auth_token(auth_response=auth_response.json())
             auth_token = auth_response.json().get("access_token")
             headers = {**headers, **{"Authorization": f"bearer {auth_token}"}}
@@ -47,21 +58,31 @@ class Reddit(object):
         self._update_oauth_headers()
 
         params = {"q": search_term}
-        response = requests.get(self.base_url+str(endpoint), headers=self.headers, params=params)
+        response = requests.get(
+            self.base_url + str(endpoint), headers=self.headers, params=params
+        )
 
         return response
 
 
 if __name__ == "__main__":
     from dotenv import load_dotenv
+
     load_dotenv()
     CLIENT_ID = os.environ.get("REDDIT_CLIENT_ID")
     SECRET_TOKEN = os.environ.get("REDDIT_SECRET_TOKEN")
     USERNAME = os.environ.get("REDDIT_USERNAME")
     PASSWORD = os.environ.get("REDDIT_PASSWORD")
 
-    reddit = Reddit(client_id=CLIENT_ID, secret_token=SECRET_TOKEN, username=USERNAME, password=PASSWORD)
+    reddit = Reddit(
+        client_id=CLIENT_ID,
+        secret_token=SECRET_TOKEN,
+        username=USERNAME,
+        password=PASSWORD,
+    )
 
-    response = reddit.search_subreddit(endpoint="/r/wallstreetbets/search", search_term="MSFT")
+    response = reddit.search_subreddit(
+        endpoint="/r/wallstreetbets/search", search_term="MSFT"
+    )
 
     print(response.json().get("data").get("children")[0])
