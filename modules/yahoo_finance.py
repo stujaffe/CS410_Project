@@ -34,7 +34,7 @@ def get_historical_data(
     return target_data
 
 
-def __http_adapter(self) -> HTTPAdapter:
+def __http_adapter() -> HTTPAdapter:
     retry_params = urllib3.Retry(
         total=3,
         read=3,

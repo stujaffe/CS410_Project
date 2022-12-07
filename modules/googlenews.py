@@ -87,7 +87,7 @@ class GoogleNews(object):
 
         return response
 
-    def get_canonical_url(self, rss_url: str, retries: int = 0, max_retries=3) -> str:
+    def get_canonical_url(self, rss_url: str) -> str:
         canonical_url = None
         http = self._http_adapter()
         try:
