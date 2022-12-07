@@ -4,6 +4,7 @@ from statistics import harmonic_mean
 from sentence_transformers import SentenceTransformer
 import numpy as np
 import numpy.typing as npt
+import pandas as pd
 
 
 class RuleBasedSentiment(object):
@@ -61,7 +62,9 @@ class EmbeddedSentiment(object):
     def create_embeddings(
         self, query: str, normalize: bool = True, progress_bar: bool = False
     ) -> npt.NDArray[np.float_]:
-        embeddings = self.model.encode(query, normalize_embeddings=normalize, show_progress_bar= progress_bar)
+        embeddings = self.model.encode(
+            query, normalize_embeddings=normalize, show_progress_bar=progress_bar
+        )
 
         # Ensure vector elements are float32 type.
         embeddings = np.asarray(embeddings, dtype="float32")
@@ -108,7 +111,7 @@ class EmbeddedSentiment(object):
     ) -> Tuple[bool, float]:
         # Figures out the sentiment label
         scores_arr = sentiment_labels[indices]
-        mean = sum(scores_arr)/len(scores_arr)
+        mean = sum(scores_arr) / len(scores_arr)
         if mean > 0.5:
             label = 1
         elif mean == 0.5:
@@ -120,6 +123,20 @@ class EmbeddedSentiment(object):
             label,
             mean,
         )
+
+    @staticmethod
+    def get_stock_data_embed(
+        filepath: str, sample: int = 1000
+    ) -> pd.DataFrame:
+        
+        embed = EmbeddedSentiment()
+        stock_df = pd.read_csv(filepath_or_buffer=filepath, header=0, index_col=0)
+        stock_df = stock_df.sample(n=sample)
+        sentences = list(stock_df["Sentence"])
+        embeddings = embed.create_embeddings(sentences, progress_bar=True)
+        stock_df["Embeddings"] = embeddings.tolist()
+
+        return stock_df
 
 
 if __name__ == "__main__":
