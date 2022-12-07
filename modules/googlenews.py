@@ -166,6 +166,7 @@ class GoogleNews(object):
         links_rss = [x.find("link").text for x in items]
         links_canon = [self.get_canonical_url(x) for x in links_rss]
 
+        contents = []
         for url in links_canon:
             content = self.get_article_conents(canonical_url=url, query_terms=["MSFT"])
             contents.append(content)
@@ -179,19 +180,4 @@ class GoogleNews(object):
 
 
 if __name__ == "__main__":
-
-    gn = GoogleNews()
-
-    response = gn.search(query="MSFT")
-
-    df = gn.parse_search_response(response=response)
-
-    canonicals = df.loc[:, "links_canonical"]
-
-    contents = []
-    for url in canonicals:
-        content = gn.get_article_conents(canonical_url=url, query_terms=["MSFT"])
-        contents.append(content)
-
-    for c in contents:
-        print(len(c))
+    pass

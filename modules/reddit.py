@@ -66,23 +66,4 @@ class Reddit(object):
 
 
 if __name__ == "__main__":
-    from dotenv import load_dotenv
-
-    load_dotenv()
-    CLIENT_ID = os.environ.get("REDDIT_CLIENT_ID")
-    SECRET_TOKEN = os.environ.get("REDDIT_SECRET_TOKEN")
-    USERNAME = os.environ.get("REDDIT_USERNAME")
-    PASSWORD = os.environ.get("REDDIT_PASSWORD")
-
-    reddit = Reddit(
-        client_id=CLIENT_ID,
-        secret_token=SECRET_TOKEN,
-        username=USERNAME,
-        password=PASSWORD,
-    )
-
-    response = reddit.search_subreddit(
-        endpoint="/r/wallstreetbets/search", search_term="MSFT"
-    )
-
-    print(response.json().get("data").get("children")[0])
+    pass

@@ -1,4 +1,3 @@
-
 from modules.sentiment import EmbeddedSentiment
 from modules.googlenews import GoogleNews
 from modules import yahoo_finance as yfin

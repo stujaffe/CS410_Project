@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, Union, List, Tuple
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from statistics import harmonic_mean
 from sentence_transformers import SentenceTransformer
@@ -93,12 +93,34 @@ class EmbeddedSentiment(object):
             dot_product = dot_product.T
 
         return dot_product
-    
-    def get_closest_matches(similarity_scores: npt.NDArray[np.float_], limit: int) -> List[int]:
+
+    def get_closest_matches(
+        similarity_scores: npt.NDArray[np.float_], limit: int
+    ) -> npt.NDArray[np.int_]:
         # Will return the indices of the highest similarity scores (returns N highest where N=limit)
         indices = np.argpartition(similarity_scores, -limit)[-limit:]
 
         return indices
+
+    def get_sentiment_scores(
+        indices: npt.NDArray[np.int_],
+        sentiment_labels: Union[npt.NDArray[np.int_], List[int]],
+    ) -> Tuple[bool, float]:
+        # Figures out the sentiment label
+        scores_arr = sentiment_labels[indices]
+        mean = sum(scores_arr)/len(scores_arr)
+        if mean > 0.5:
+            label = 1
+        elif mean == 0.5:
+            label = 0
+        else:
+            label = -1
+
+        return (
+            label,
+            mean,
+        )
+
 
 if __name__ == "__main__":
     pass
