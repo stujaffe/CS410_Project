@@ -59,9 +59,9 @@ class EmbeddedSentiment(object):
         self.model = SentenceTransformer(self.model_name)
 
     def create_embeddings(
-        self, query: str, normalize: bool = True
+        self, query: str, normalize: bool = True, progress_bar: bool = False
     ) -> npt.NDArray[np.float_]:
-        embeddings = self.model.encode(query, normalize_embeddings=normalize)
+        embeddings = self.model.encode(query, normalize_embeddings=normalize, show_progress_bar= progress_bar)
 
         # Ensure vector elements are float32 type.
         embeddings = np.asarray(embeddings, dtype="float32")
