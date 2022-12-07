@@ -12,7 +12,7 @@ class Subreddit(object):
         self.posts = []
         self.subreddit = subreddit
         self.reddit = praw.Reddit(
-            # Register a reddit app at https://www.reddit.com/prefs/apps to get client_id and client_secdret
+            # Register a reddit app at https://www.reddit.com/prefs/apps to get client_id and client_secret
             client_id=client_id,
             client_secret=client_secret,
             user_agent='CS410 BOT',

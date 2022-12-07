@@ -3,7 +3,7 @@ import pandas as pd
 from source.subreddit import Subreddit
 from source.stock_sentiment import StockSentiment
 
-# Register a reddit app at https://www.reddit.com/prefs/apps to get client_id and client_secdret
+# Register a reddit app at https://www.reddit.com/prefs/apps to get client_id and client_secret
 CLIENT_ID = '****'
 CLIENT_SECRET = '****'
 
