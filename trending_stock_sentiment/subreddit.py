@@ -22,6 +22,7 @@ class Subreddit(object):
         self.get_top_posts()
         self.populate_post_responses()
 
+    # Fetch all the top level posts that are considered "rising" on the target subreddit
     def get_top_posts(self):
         headers = {'User-Agent': 'CS410/1.0.0'}
         url = 'http://reddit.com/r/{0}/rising.json'.format(self.subreddit)
@@ -36,6 +37,7 @@ class Subreddit(object):
             targetData = {'title': data['title'], 'id': data['id'], 'responses': []}
             self.posts.append(targetData)
 
+    # Get the responses/comments for all the "rising" posts on the target subreddit
     def populate_post_responses(self):
         for post in self.posts:
             submission = self.reddit.submission(post['id'])
@@ -47,6 +49,7 @@ class Subreddit(object):
             if post['responses']:
                 del post['responses'][0]  # remove metadata from responses
 
+    # Flatten post titles and comments into a single Pandas dataframe and return it
     def get_all_comments(self):
         """
         Returns all post text and response text in a list

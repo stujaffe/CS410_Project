@@ -7,7 +7,7 @@ from source.stock_sentiment import StockSentiment
 CLIENT_ID = '****'
 CLIENT_SECRET = '****'
 
-
+# Get a single datagram that has titles and comments from rising Reddit posts on 3 popular investment subreddits
 def get_trending_subreddits():
     subreddit1 = Subreddit("wallstreetbets", CLIENT_ID, CLIENT_SECRET)
     subreddit2 = Subreddit("investing", CLIENT_ID, CLIENT_SECRET)
@@ -24,7 +24,7 @@ def get_trending_subreddits():
 
     return pd.concat(frames)
 
-
+# Perform NER and sentiment analysis on Reddit posts datagram
 def main():
     df = get_trending_subreddits()
     df.to_csv("posts.csv", encoding='utf-8', index=False)
