@@ -48,6 +48,12 @@ a significant data cleaning problem. This issue also complicates the task of nam
 ### Overview
 This functionality will take a stock ticker symbol e.g. `GOOG`, search the Google News RSS feed for that ticker symbol, take each RSS feed URL, scrape the article page via the RSS feed URL for the canonical url (e.g. `www.nytimes.com/articleX`) since the RSS feed URL is not directly scrapable, and then scrape the artcile page via the canonical URL, where possible. Once the web pages are scraped, the program will assign a sentiment scores the to news article titles and the article content.
 
+### How To Run
+You can experiment with the Google News sentiment functionality as follows:
+1. From the command line run `python3 main_gnews.py [TICKER SYMBOL]`. E.g. `python3 main_gnews.py AAPL`. If you do not supply a ticker symbol or supply an invalid ticker symbol, an exception will be raised.
+2. You should see some logging messages about what's happening. Sometimes the process takes several minutes due to the web scraping and word embedding process.
+3. The logging messages should tell that it saved the ticker symbol output files in the folder `output`.
+
 ### Sentiment Scoring Methods
 ## Rule Based
 Utilizes the `Vader` senitment scorer. This is a lexicon and rules-based sentiment classifier, which means it has difficulty with words it doesn't already know and has trouble with context. It outputs a dictionary of scores, positive/neutral/negative/compound. The compound score is a wegighted average of sorts and is utilized in the program's rules based senitment scores for news articles.
