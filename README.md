@@ -19,7 +19,7 @@ The intended purpose of this tool is to allow users to pick up the latest sentim
 
 ## How To Run
 1. Consult `get_trending_stock_sentiment.py` and view the `main` function for an example of how to use this tool.
-2. You can run the current implementation from OUTSIDe the `trending_stock_sentiment` directory by using the command line: `python3 trending_stock_sentiment/get_trending_stock_sentiment.py`.
+2. You can run the current implementation from OUTSIDE (in the main project folder) the `trending_stock_sentiment` directory by using the command line: `python3 trending_stock_sentiment/get_trending_stock_sentiment.py`.
 
 
 ### Example Output
