@@ -56,7 +56,7 @@ Utilizes the Sentence-BERT (SBERT), a bi-encoder version of the BERT transformer
 A similar process is done for the news article's contents. However, the contents are lists of sentneces so each sentence in one article is embedded and compared with the random sample from the labeled file, then the entire article's contents are averaged for the sentiment score.
 
 ### Stock Returns
-Yahoo Finance data is utilzed to calculate stock return data (with dividends reinvested). In order to calculate return, the earliest news story date and the latest news story date are taken as the beginning and end of the stock holding period.
+Yahoo Finance data is utilzed to calculate stock return data (with dividends reinvested). In order to calculate return, the earliest news story date and the latest news story date are taken as the beginning and end of the stock holding period. The average yearly return is calculated based on the holding period, no matter how long the holding period was.
 
 ### Output
 Returns a summary JSON file and a CSV file via a Pandas DataFrame in the a folder called `output` (the folder will be created if it doesn't already exist).
@@ -75,3 +75,10 @@ Exmaple summary output:
 }
 ```
 
+### Known Issues
+It's difficult to create a scraping tool that will be able to scrape all types of different webpages that arise from the Google News RSS feed. Some website are behind a paywall, some use dynamically rendered content via JavaScript, HTML tags change, etc. In addition, while the labeled sentiment data is financial and stock related, a generic transformer model like SBERT is still being used without more fine-tuning to deal with the uniquness of the NLP data here.
+
+## Other Tools
+
+### Reddit Search
+There is a module called `reddit.py` in the `modules` folder that allows you to search for Reddit posts. So, you can search for `GOOG` but this time on WallStreetBets. In order to access this part of the Reddit API, you need the `client_id` and `secret_token` mentioned above, but also a Reddit login and password. These variables are outlined in `.env.sample` and can be passed as environmental variables in the `reddit.py` `Reddit` class. A similar logic can be followed as with Google News to analyze the Reddit posts from WallStreetBets or other sub-Reddits.
