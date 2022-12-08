@@ -1,4 +1,4 @@
-from typing import Dict, Union, List, Tuple
+from typing import Dict, Union, List
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from statistics import harmonic_mean
 from sentence_transformers import SentenceTransformer
@@ -71,6 +71,7 @@ class EmbeddedSentiment(object):
 
         return embeddings
 
+    @staticmethod
     def calc_dot_product(
         vector1: npt.NDArray[np.float_], vector2: npt.NDArray[np.float_]
     ) -> npt.NDArray[np.float_]:
@@ -78,6 +79,14 @@ class EmbeddedSentiment(object):
         # Ensure both vectors exist
         if vector1.size == 0 or vector2.size == 0:
             return np.asarray([])
+        try:
+            vector1.shape[1]
+        except IndexError:
+            vector1 = np.asarray([vector1])
+        try:
+            vector2.shape[1]
+        except IndexError:
+            vector2 = np.asarray([vector2])
 
         # Dot product of L2 normalized vectors equals the cosine similarity.
         # Staples embeddings will be a (N, 768) vector where N is the number of product names and 768 is the dimension of the embedding based on
@@ -89,52 +98,41 @@ class EmbeddedSentiment(object):
         else:
             dot_product = np.dot(vector1, vector2.T)
 
-        # We want the resulting vector to have N rows and 1 column. If it has 1 row (shape[0]) and N columns (shape[1]) then we won't be able
-        # to index it properly. That is, dot_product[4] with dot_product having shape (1, N) would throw an exception because all the results
-        # are stored column-wise, not row-wise.
-        if dot_product.shape[0] < dot_product.shape[1]:
-            dot_product = dot_product.T
+        if dot_product.shape[0] == 1:
+            dot_product = dot_product[0]
 
         return dot_product
 
+    @staticmethod
     def get_closest_matches(
         similarity_scores: npt.NDArray[np.float_], limit: int
     ) -> npt.NDArray[np.int_]:
+        if len(similarity_scores) < limit:
+            limit = len(similarity_scores)
         # Will return the indices of the highest similarity scores (returns N highest where N=limit)
         indices = np.argpartition(similarity_scores, -limit)[-limit:]
 
         return indices
 
+    @staticmethod
     def get_sentiment_scores(
         indices: npt.NDArray[np.int_],
         sentiment_labels: Union[npt.NDArray[np.int_], List[int]],
-    ) -> Tuple[bool, float]:
+    ) -> float:
         # Figures out the sentiment label
         scores_arr = sentiment_labels[indices]
         mean = sum(scores_arr) / len(scores_arr)
-        if mean > 0.5:
-            label = 1
-        elif mean == 0.5:
-            label = 0
-        else:
-            label = -1
 
-        return (
-            label,
-            mean,
-        )
+        return mean
 
-    @staticmethod
-    def get_stock_data_embed(
-        filepath: str, sample: int = 1000
-    ) -> pd.DataFrame:
-        
-        embed = EmbeddedSentiment()
+    def get_stock_data_embed(self, filepath: str, sample: int = 1000) -> pd.DataFrame:
+
         stock_df = pd.read_csv(filepath_or_buffer=filepath, header=0, index_col=0)
         stock_df = stock_df.sample(n=sample)
-        sentences = list(stock_df["Sentence"])
-        embeddings = embed.create_embeddings(sentences, progress_bar=True)
+        sentences = stock_df["Sentence"].to_numpy()
+        embeddings = self.create_embeddings(sentences, progress_bar=True)
         stock_df["Embeddings"] = embeddings.tolist()
+        stock_df.reset_index(inplace=True)
 
         return stock_df
 

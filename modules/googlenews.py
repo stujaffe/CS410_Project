@@ -106,7 +106,10 @@ class GoogleNews(object):
             return canonical_url
         soup = BeautifulSoup(response.text, "lxml")
         dom = etree.HTML(str(soup))
-        element = dom.xpath("//head//link[@rel='canonical']")
+        try:
+            element = dom.xpath("//head//link[@rel='canonical']")
+        except AttributeError:
+            return canonical_url
         try:
             canonical_url = element[0].get("href")
         except IndexError:
