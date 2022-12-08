@@ -1,10 +1,10 @@
-# CourseProject
-
-Please fork this repository and paste the github link of your fork on Microsoft CMT. Detailed instructions are on Coursera under Week 1: Course Project Overview/Week 9 Activities.
-
 # Overview
 This project provides a suite of tools to retrieve trending news and social media posts along with mechanisms to extract relevant entities from this text to perform sentiment analysis. Consult the sections below for descriptions of the included tools, use cases and instructions for setup and operation.
 
+## Setup
+It's highly recommended to use a Python virtual environment, either via `python3 -m venv venv` or an external tool such as `pyenv` where you can control the Python version within the virtual environment as well.
+Recommended Python version: `3.9+`
+Start by installing the requirements, via `pip install -r requirements.txt`
 
 ## Trending Reddit Stock Sentiment
 This tool uses Reddit APIs along with Python lib `praw` to fetch all the trending posts and responses in each of the posts from popular stock/investment subreddits (wallstreetbets, stocks, investing by default). 
@@ -43,4 +43,5 @@ a significant data cleaning problem. This issue also complicates the task of nam
 
 
 
-# Contributions
+## Google News Sentiment Plus Stock Returns
+
