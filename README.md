@@ -45,3 +45,33 @@ a significant data cleaning problem. This issue also complicates the task of nam
 
 ## Google News Sentiment Plus Stock Returns
 
+### Overview
+This functionality will take a stock ticker symbol e.g. `GOOG`, search the Google News RSS feed for that ticker symbol, take each RSS feed URL, scrape the article page via the RSS feed URL for the canonical url (e.g. `www.nytimes.com/articleX`) since the RSS feed URL is not directly scrapable, and then scrape the artcile page via the canonical URL, where possible. Once the web pages are scraped, the program will assign a sentiment scores the to news article titles and the article content.
+
+### Sentiment Scoring Methods
+## Rule Based
+Utilizes the `Vader` senitment scorer. This is a lexicon and rules-based sentiment classifier, which means it has difficulty with words it doesn't already know and has trouble with context. It outputs a dictionary of scores, positive/neutral/negative/compound. The compound score is a wegighted average of sorts and is utilized in the program's rules based senitment scores for news articles.
+## Embedded Based
+Utilizes the Sentence-BERT (SBERT), a bi-encoder version of the BERT transformer that is much faster at encoding sentences than BERT. The news article titles are embedded with SBERT, then compared to a random sample of labeled sentiment data from stocks that is kept in the `assets` folder. Ideally the entire labeled sentiment data would be used, but it has 100,000+ data points so that is not feasible in the time allotated (it takes around 90 minutes to embed all 100,000+ data points on a CPU machine). In order to decide a sentiment score, the title embedding's K nearest neighbors are taken from the random sample based on cosine similarity. The average of the binary 0/1 sentiment scores is taken as the embedded sentiment score.
+A similar process is done for the news article's contents. However, the contents are lists of sentneces so each sentence in one article is embedded and compared with the random sample from the labeled file, then the entire article's contents are averaged for the sentiment score.
+
+### Stock Returns
+Yahoo Finance data is utilzed to calculate stock return data (with dividends reinvested). In order to calculate return, the earliest news story date and the latest news story date are taken as the beginning and end of the stock holding period.
+
+### Output
+Returns a summary JSON file and a CSV file via a Pandas DataFrame in the a folder called `output` (the folder will be created if it doesn't already exist).
+Exmaple summary output:
+```
+{
+    "ticker": "GOOG",
+    "company_name": "Alphabet Inc.",
+    "earliest_news_date": "2022-04-20",
+    "latest_news_date": "2022-12-08",
+    "news_title_sentiment_KNN": 0.5103,
+    "news_title_sentiment_rules": 0.10207299999999998,
+    "article_sentiment_KNN": 0.5045454545454545,
+    "article_sentiment_rules": 0.12450454545454546,
+    "stock_market_return": -0.397369190693005
+}
+```
+
