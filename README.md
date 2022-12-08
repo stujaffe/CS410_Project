@@ -17,8 +17,9 @@ leave only stock symbols, company names and other potential investment targets. 
 The intended purpose of this tool is to allow users to pick up the latest sentiments on popular investment entities based on trending Reddit activity. 
 
 
-### Usage
-Consult `get_trending_stock_sentiment.py` and view the `main` function for an example of how to use this tool. 
+## How To Run
+1. Consult `get_trending_stock_sentiment.py` and view the `main` function for an example of how to use this tool.
+2. You can run the current implementation from OUTSIDe the `trending_stock_sentiment` directory by using the command line: `python3 trending_stock_sentiment/get_trending_stock_sentiment.py`.
 
 
 ### Example Output
