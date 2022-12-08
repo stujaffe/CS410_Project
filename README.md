@@ -50,9 +50,13 @@ This functionality will take a stock ticker symbol e.g. `GOOG`, search the Googl
 
 ### How To Run
 You can experiment with the Google News sentiment functionality as follows:
-1. From the command line run `python3 main_gnews.py [TICKER SYMBOL]`. E.g. `python3 main_gnews.py AAPL`. If you do not supply a ticker symbol or supply an invalid ticker symbol, an exception will be raised.
-2. You should see some logging messages about what's happening. Sometimes the process takes several minutes due to the web scraping and word embedding process.
-3. The logging messages should tell that it saved the ticker symbol output files in the folder `output`.
+1. From the command line run `python3 main_gnews.py [TICKER SYMBOL] [SAMPLE SIZE] [K]`. E.g. `python3 main_gnews.py AAPL 2000 150`. If you do not supply a ticker symbol or supply an invalid ticker symbol, an exception will be raised. If you do not supply a proper float or integer for `SAMPLE SIZE` or `K`, an exception will also be raised.
+2. Explaination of inputs:
+- TICKER SYMBOL: The stock you wish to investigate.
+- SAMPLE SIZE: The number of observations you wish to sample from the data file. The SBERT bi-encoding is much faster than BERT cross-encoding, but choosing a sample size in the tens of thousands will take quite a while.
+- K: The number of nearest neighbors the embedded sample size analysis will take into account. `K` should be less than `SAMPLE SIZE`. If it is greater, then the program will default to `K = SAMPLE SIZE`.
+4. You should see some logging messages about what's happening. Sometimes the process takes several minutes due to the web scraping and word embedding process.
+5. The logging messages should tell that it saved the ticker symbol output files in the folder `output`.
 
 ### Sentiment Scoring Methods
 ## Rule Based
