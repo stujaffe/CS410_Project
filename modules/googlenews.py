@@ -158,7 +158,7 @@ class GoogleNews(object):
 
         return content
 
-    def parse_search_response(self, response: requests.models.Response) -> pd.DataFrame:
+    def parse_search_response(self, response: requests.models.Response, query_terms: List[str]) -> pd.DataFrame:
 
         soup = BeautifulSoup(response.text, "xml")
 
@@ -171,7 +171,7 @@ class GoogleNews(object):
 
         contents = []
         for url in links_canon:
-            content = self.get_article_conents(canonical_url=url, query_terms=["MSFT"])
+            content = self.get_article_conents(canonical_url=url, query_terms=query_terms)
             contents.append(content)
 
         output = pd.DataFrame(

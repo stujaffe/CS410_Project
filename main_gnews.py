@@ -4,6 +4,7 @@ from modules.yahoo_finance import YahooFinance
 from modules.utils import logger as lg
 
 import os
+import sys
 from datetime import datetime
 import numpy as np
 import json
@@ -46,16 +47,25 @@ def output_to_csv(df: pd.DataFrame, output_path: str) -> None:
 
 if __name__ == "__main__":
 
-    gn = GoogleNews()
+    # Get the ticker symbol from the command line
+    try:
+        ticker = str(sys.argv[1]).upper()
+    except IndexError:
+        raise Exception("You did not specify a ticker symbol.")
+    
     yfin = YahooFinance()
+    company = yfin.get_company_name(ticker=ticker)
+
+    if company.lower() == "ya":
+        raise Exception(f"'{ticker}' is not a valid ticker symbol. Please enter a valid ticker symbol, e.g. 'AAPL'.")
+
+    gn = GoogleNews()    
     embed = EmbeddedSentiment()
     rules = RuleBasedSentiment()
 
-    ticker = "GOOG"
-    company = yfin.get_company_name(ticker=ticker)
     logger.info(f"Searching Google News RSS feed for the ticker '{ticker}'...")
     news_response = gn.search(query=ticker)
-    news_df = gn.parse_search_response(response=news_response)
+    news_df = gn.parse_search_response(response=news_response, query_terms=[ticker, company])
     logger.info(f"Finished searching Google News RSS feed for the ticker '{ticker}'.")
     logger.info(f"Retrieving stock data embeddings for sentiment analysis.")
     stock_embed_df = embed.get_stock_data_embed(filepath=DATA_PATH, sample=1000)
