@@ -52,20 +52,48 @@ if __name__ == "__main__":
         ticker = str(sys.argv[1]).upper()
     except IndexError:
         raise Exception("You did not specify a ticker symbol.")
+
+    # Get the sample size and k for k-NN from the command line
+    try:
+        sample_size = int(sys.argv[2])
+    except ValueError:
+        raise Exception(
+            "You did not enter a valid integer for the embedded sentiment sample size."
+        )
     
+    if sample_size > 111000:
+        raise Exception("The sample size you chose is larger than the number of data points in the labeled sentiment data.")
+
+    try:
+        k = int(sys.argv[3])
+    except ValueError:
+        raise Exception(
+            "You did not enter a valid integer for k to be used in the k-NN sentiment analysis."
+        )
+
+    if k > sample_size:
+        k = sample_size
+        logger.warning(
+            f"You entered a sample size of '{sample_size}' and a k of '{k}'. k cannot exceed sample size so sample size will be used as the value of k."
+        )
+
     yfin = YahooFinance()
     company = yfin.get_company_name(ticker=ticker)
 
     if company.lower() == "ya":
-        raise Exception(f"'{ticker}' is not a valid ticker symbol. Please enter a valid ticker symbol, e.g. 'AAPL'.")
+        raise Exception(
+            f"'{ticker}' is not a valid ticker symbol. Please enter a valid ticker symbol, e.g. 'AAPL'."
+        )
 
-    gn = GoogleNews()    
+    gn = GoogleNews()
     embed = EmbeddedSentiment()
     rules = RuleBasedSentiment()
 
     logger.info(f"Searching Google News RSS feed for the ticker '{ticker}'...")
     news_response = gn.search(query=ticker)
-    news_df = gn.parse_search_response(response=news_response, query_terms=[ticker, company])
+    news_df = gn.parse_search_response(
+        response=news_response, query_terms=[ticker, company]
+    )
     logger.info(f"Finished searching Google News RSS feed for the ticker '{ticker}'.")
     logger.info(f"Retrieving stock data embeddings for sentiment analysis.")
     stock_embed_df = embed.get_stock_data_embed(filepath=DATA_PATH, sample=1000)
