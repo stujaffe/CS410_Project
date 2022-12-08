@@ -37,5 +37,6 @@ class StockSentiment(object):
         return self.df
 
 
+
 if __name__ == "__main__":
     pass
