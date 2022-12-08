@@ -1,6 +1,6 @@
 # Overview
 This project provides a suite of tools to retrieve trending news and social media posts along with mechanisms to extract relevant entities from this text to perform sentiment analysis. Consult the sections below for descriptions of the included tools, use cases and instructions for setup and operation.
-You can find the demo video here (recorded with QuickTime): [Project Video] (https://drive.google.com/file/d/1ihuBVXWDntiEn5YEKL9YL3AxHf-HBbIc/view?usp=share_link)
+You can find the demo video here (recorded with QuickTime): [Project Video](https://drive.google.com/file/d/1ihuBVXWDntiEn5YEKL9YL3AxHf-HBbIc/view?usp=share_link)
 
 ## Setup / Requirements
 - Development and testing was done with Python 3.9
